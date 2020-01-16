@@ -16,18 +16,20 @@ pipeline {
             }
         }
 
-        stage('Sonarqube') {
-            environment {
-                scannerHome = tool 'SonarQubeScanner'
-            }
-
+        stage('build && SonarQube analysis') {
             steps {
-                    withSonarQubeEnv('sonarqube') {
-                            sh "${scannerHome}/bin/sonar-scanner"
-                    }
-
-                timeout(time: 10, unit: 'MINUTES') {
-                        waitForQualityGate abortPipeline: true
+                withSonarQubeEnv('sonarqube') {
+                        sh 'mvn clean package sonar:sonar'
+                }
+            }
+        }
+        
+        stage("Quality Gate") {
+            steps {
+                timeout(time: 1, unit: 'HOURS') {
+                    // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
+                    // true = set pipeline to UNSTABLE, false = don't
+                    waitForQualityGate abortPipeline: true
                 }
             }
         }
