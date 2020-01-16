@@ -24,7 +24,7 @@ pipeline {
             }
         }
         
-        stage("Quality Gate") {
+        /*stage("Quality Gate") {
             steps {
                 timeout(time: 1, unit: 'MINUTES') {
                     // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
@@ -32,7 +32,7 @@ pipeline {
                     waitForQualityGate abortPipeline: true
                 }
             }
-        }
+        }*/
 
 
         stage ('Deployment Stage') {
